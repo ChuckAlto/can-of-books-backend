@@ -31,20 +31,20 @@ app.get('/books', handleGetBooks);
 
 async function handleGetBooks(request, response) {
   let searchQuery = {};
-  if (request.query.location) {
+  if (request.query.email) {
     searchQuery = {
-      location: request.query.location
+      location: request.query.email
     }
   }
   try {
-    let booksDB = await Books.find(searchQuery);
-    if (booksDB.length > 0) {
-      response.status(200).send(booksDB);
+    let bookResults = await Books.find(searchQuery);
+    if (bookResults.length > 0) {
+      response.status(200).send(bookResults);
     } else {
       response.status(404).send('Error Missing books');
     }
   } catch (err) {
-    response.status(500).send('No connection!');
+    response.status(500).send('Server Error');
   }
 }
 
