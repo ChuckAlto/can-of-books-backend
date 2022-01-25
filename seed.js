@@ -4,7 +4,7 @@ require('dotenv').config();
 const mongoose = require('mongoose');
 mongoose.connect(process.env.DB_URL);
 
-const Book = require('./models/book');
+const Books = require('./models/book');
 const db = mongoose.connection;
 db.on('error', console.error.bind(console, 'connection error'));
 db.once('open', function () {
@@ -12,14 +12,14 @@ db.once('open', function () {
 });
 
 async function seed() {
-  await Book.create({
+  await Books.create({
     title: 'Simulation Hypothesis',
     description: 'Book for lovers of sci-fi, computer science and video games',
     status: 'reading',
     email: 'rivkadavidowski@fakeuser.com'
   });
   console.log('simulation saved');
-  await Book.create({
+  await Books.create({
     title: 'Foundation',
     description: 'Sci-fi concerning the fall of the galactic empire and one planet holding the hope of the universe',
     status: 'Read',
@@ -27,7 +27,7 @@ async function seed() {
   });
   console.log('foundation saved');
 
-  await Book.create({
+  await Books.create({
 
     title: 'Someone to love me',
     description: 'Young adult fiction of a teenage who finds herself in an abusive relationship',
@@ -36,7 +36,7 @@ async function seed() {
   });
   console.log('someone saved');
 
-  await Book.create({
+  await Books.create({
     title: 'American Pastoral',
     description: 'A look at the tragedies of every day life through the eyes of one american.',
     status: 'read',

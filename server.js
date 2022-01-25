@@ -4,7 +4,7 @@ require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
 const mongoose = require('mongoose');
-const Book = require('./models/book');
+const Books = require('./models/books');
 const { response } = require('express');
 
 mongoose.connect(process.env.DB_URL)
@@ -26,10 +26,10 @@ app.get('/test', (request, response) => {
 
 })
 
-app.get('/book', handleBooks);
+app.get('/books', handleGetBooks);
 
 
-async function handleBooks(request, response) {
+async function handleGetBooks(request, response) {
   let searchQuery = {};
   if (request.query.location) {
     searchQuery = {
@@ -37,11 +37,11 @@ async function handleBooks(request, response) {
     }
   }
   try {
-    let booksDB = await Book.find(searchQuery);
+    let booksDB = await Books.find(searchQuery);
     if (booksDB.length > 0) {
       response.status(200).send(booksDB);
     } else {
-      response.status(404).send('Error: Try again!');
+      response.status(404).send('Error Missing books');
     }
   } catch (err) {
     response.status(500).send('No connection!');
