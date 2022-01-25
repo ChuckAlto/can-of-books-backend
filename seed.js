@@ -7,60 +7,44 @@ mongoose.connect(process.env.DB_URL);
 const Book = require('./models/book');
 const db = mongoose.connection;
 db.on('error', console.error.bind(console, 'connection error'));
-db.once('open', function(){
+db.once('open', function () {
   console.log('Mongoose is connected')
 });
 
-async function seed(){
+async function seed() {
+  await Book.create({
+    title: 'Simulation Hypothesis',
+    description: 'Book for lovers of sci-fi, computer science and video games',
+    status: 'reading',
+    email: 'rivkadavidowski@fakeuser.com'
+  });
+  console.log('simulation saved');
+  await Book.create({
+    title: 'Foundation',
+    description: 'Sci-fi concerning the fall of the galactic empire and one planet holding the hope of the universe',
+    status: 'Read',
+    email: 'Chuckalto@gmail.com'
+  });
+  console.log('foundation saved');
 
-const  simulation = new Book ({
-  title: 'Simulation Hypothesis',
-  description: 'Book for lovers of sci-fi, computer science and video games',
-  status: 'reading',
-  email: 'rivkadavidowski@fakeuser.com'
-});
-simulation.save(function(err){
-  if(err) console.error(err);
-  else console.log('You are in a simulation')
-})
+  await Book.create({
 
-const foundation = new Book ({
-  title: 'Foundation',
-  description: 'Sci-fi concerning the fall of the galactic empire and one planet holding the hope of the universe',
-  status: 'Read',
-  email: 'Chuckalto@gmail.com'
-});
-foundation.save(function(err){
-  if(err) console.error(err);
-  else console.log('Read foundation, don\'t watch the show')
-})
+    title: 'Someone to love me',
+    description: 'Young adult fiction of a teenage who finds herself in an abusive relationship',
+    status: 'read',
+    email: 'hayesregan@whocares.com'
+  });
+  console.log('someone saved');
 
-  const someone = new Book ({
-
-  title: 'Someone to love me',
-  description: 'Young adult fiction of a teenage who finds herself in an abusive relationship',
-  status: 'read',
-  email: 'hayesregan@whocares.com'
-});
-someone.save(function(err){
-  if(err) console.error(err);
-  else console.log('You are loved')
-})
-
-  const american = new Book ({
-  title: 'American Pastoral',
-  description: 'A look at the tragedies of every day life through the eyes of one american.',
-  status: 'read',
-  email: 'robbmalexander@gmail.com'
-
-});
-american.save(function(err){
-  if(err) console.error(err);
-  else console.log('american works')
-
-});
-
-mongoose.disconnect();
+  await Book.create({
+    title: 'American Pastoral',
+    description: 'A look at the tragedies of every day life through the eyes of one american.',
+    status: 'read',
+    email: 'robbmalexander@gmail.com'
+  });
+  console.log('american saved');
+  
+  mongoose.disconnect();
 }
 
 seed();
