@@ -32,13 +32,14 @@ app.get('/test', (request, response) => {
 app.get('/books', handleGetBooks);
 app.post('/books', handlePostBooks);
 app.delete('/books/:id', handleDeleteBooks);
+app.put('/books/:id', handlePutBooks);
 
 async function handleDeleteBooks (request, response) {
   let id = request.params.id;
   console.log(request.params);
   try { 
     await Books.findByIdAndDelete (id);
-    response.status(204).send('Successfully deleted');
+    response.status(200).send('Successfully deleted');
   } catch (err) {
     response.status(404).send(`Unable to delete id: ${id}`);
   }
@@ -49,7 +50,7 @@ async function handleGetBooks(request, response) {
   let searchQuery = {};
   if (request.query.email) {
     searchQuery = {
-      location: request.query.email
+      email: request.query.email
     }
     console.log(request.query);
   }
@@ -73,6 +74,16 @@ async function handlePostBooks (request, response) {
   } catch (err){
     response.status(500).send('Server Error');
   } 
+}
+
+async function handlePutBooks (request, response) {
+  let id = request.params.id;
+  try{
+    let updatedBook = await Books.findByIdAndUpdate (id, request.body, {new:true, overwrite: true});
+    response.status(200).send(updatedBook);
+  } catch (err) {
+    response.status(404).send('unable to update')
+  }
 }
 
 
