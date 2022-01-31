@@ -11,6 +11,7 @@ const { findById, findByIdAndDelete } = require('./models/books');
 mongoose.connect(process.env.DB_URL)
 
 const db = mongoose.connection;
+const verifyUser = require('./auth.js');
 db.on('error', console.error.bind(console, 'connection error'));
 db.once('open', function () {
   console.log('Mongoose is connected')
@@ -33,12 +34,13 @@ app.get('/books', handleGetBooks);
 app.post('/books', handlePostBooks);
 app.delete('/books/:id', handleDeleteBooks);
 app.put('/books/:id', handlePutBooks);
+app.get('/user', handleGetUser);
 
-async function handleDeleteBooks (request, response) {
+async function handleDeleteBooks(request, response) {
   let id = request.params.id;
   console.log(request.params);
-  try { 
-    await Books.findByIdAndDelete (id);
+  try {
+    await Books.findByIdAndDelete(id);
     response.status(200).send('Successfully deleted');
   } catch (err) {
     response.status(404).send(`Unable to delete id: ${id}`);
@@ -66,24 +68,34 @@ async function handleGetBooks(request, response) {
   }
 }
 
-async function handlePostBooks (request, response) {
-  
+async function handlePostBooks(request, response) {
+
   try {
-    const bookWeMade = await Books.create (request.body)
+    const bookWeMade = await Books.create(request.body)
     response.status(201).send(bookWeMade);
-  } catch (err){
+  } catch (err) {
     response.status(500).send('Server Error');
-  } 
+  }
 }
 
-async function handlePutBooks (request, response) {
+async function handlePutBooks(request, response) {
   let id = request.params.id;
-  try{
-    let updatedBook = await Books.findByIdAndUpdate (id, request.body, {new:true, overwrite: true});
+  try {
+    let updatedBook = await Books.findByIdAndUpdate(id, request.body, { new: true, overwrite: true });
     response.status(200).send(updatedBook);
   } catch (err) {
     response.status(404).send('unable to update')
   }
+}
+
+function handleGetUser(request, response) {
+  verifyUser(request, (err, user) => {
+    if (err) {
+      response.send('invalid token');
+    } else {
+      response.send(user)
+    }
+  })
 }
 
 
